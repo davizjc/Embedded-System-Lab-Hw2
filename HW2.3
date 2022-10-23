@@ -1,0 +1,52 @@
+#include "mbed.h"
+using namespace std::chrono;
+
+Thread thread;
+PwmOut PWM1(D6);
+
+int sample = 128;
+float ADCdata[128];
+double rads = 0.0;
+double width;
+const double pi = 3.141592653589793238462;
+const double offset = 4 / 2;  // offset" is defined as period/2
+
+void led2_thread()
+{
+  while (1)
+  {
+    PWM1.period_ms(4);       //set period = 4 sec
+          for (int i = 0; i < 360; i++)
+        {
+            rads = (pi * i) / 180.0f;
+            width = offset * (cos(rads + pi)) + offset;
+            PWM1.pulsewidth_ms(width);  // alternative to led.write, set duty cycle time in seconds
+            ThisThread::sleep_for(10ms);
+        }
+  }
+}
+
+int main()
+{
+   thread.start(led2_thread);
+
+    for (int i = 0; i < sample; i++)
+    {
+        PWM1 = width;
+        ADCdata[i] = width;
+        ThisThread::sleep_for(4000ms / sample);
+        //ThisThread::sleep_for(ms / sample);
+    }
+    for (int i = 0; i < sample; i++)
+    {
+        printf("%f\r\n", ADCdata[i]);
+        ThisThread::sleep_for(1ms);
+    }
+}
+
+
+
+
+
+
+
