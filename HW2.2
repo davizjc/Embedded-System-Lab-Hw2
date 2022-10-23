@@ -1,0 +1,29 @@
+#include "mbed.h"
+
+PwmOut PWM1(D6);
+//AnalogIn Ain(A0);
+
+int main()
+{
+  double rads = 0.0;
+  double width;
+
+  const double pi = 3.141592653589793238462;
+  const double offset = 4 / 2;  // offset" is defined as period/2
+
+  while (1)
+  {
+    PWM1.period_ms(4);       //set period = 2 ms
+    //PWM1 = Ain;
+    //printf("%f\n\r", PWM1.read());
+          for (int i = 0; i < 360; i++)
+        {
+            rads = (pi * i) / 180.0f;
+            width = offset * (cos(rads + pi)) + offset;
+            PWM1.pulsewidth_ms(width);  // alternative to led.write, set duty cycle time in seconds
+            printf("%f\n\r", width); 
+            //printf("%f\n\r", PWM1.read());
+            ThisThread::sleep_for(10ms);
+        }
+  }
+}
