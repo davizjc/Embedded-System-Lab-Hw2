@@ -1,7 +1,8 @@
 #include "mbed.h"
-#include "TextLCD.h"
+#include "uLCD_4DGL.h"
 
-TextLCD lcd(D2, D3, D4, D5, D6, D7);
+
+uLCD_4DGL uLCD(D1, D0, D2);
 InterruptIn sw2(BUTTON1);
 EventQueue queue(32 * EVENTS_EVENT_SIZE);
 Thread t;
@@ -10,9 +11,9 @@ void led1_info() {
    // Note that printf is deferred with a call in the queue
    // It is not executed in the interrupt context
     printf("button is press \r\n");   
-    lcd.printf("Hello World!\n");
+    uLCD.printf("\nHello uLCD World\n");
     ThisThread::sleep_for(1s);
-    lcd.cls();
+    uLCD.cls();
 }
 
 void Trig_led1()  {
@@ -29,6 +30,9 @@ int main() {
    // 'Trig_led1' will execute in IRQ context
    sw2.rise(Trig_led1);
 }
+
+
+
 
 
 
